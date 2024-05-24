@@ -39,3 +39,18 @@ class MatriculasTestCase(APITestCase):
         }
         response = self.client.post(self.url, data=dados)
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+
+    def test_requisicao_delete_para_nao_deletar_matricula(self):
+        """Teste para verificar a requisição DELETE não autorizada para deletar uma matricula"""
+        response = self.client.delete(f'{self.url}1/')
+        self.assertEqual(response.status_code,status.HTTP_405_METHOD_NOT_ALLOWED)
+    
+    def test_requisicao_put_para_atualizar_matricula(self):
+        """Teste para verificar a requisição PUT não permitida para atualizar uma matricula"""
+        dados = {
+            'estudante': self.estudante.pk,
+            'curso': self.curso.pk,
+            'periodo': 'V'
+        }
+        response = self.client.put(f'{self.url}1/', data=dados)
+        self.assertEqual(response.status_code, status.HTTP_405_METHOD_NOT_ALLOWED)
