@@ -29,3 +29,13 @@ class MatriculasTestCase(APITestCase):
         """Teste para verificar a requisição GET para listar as matriculas"""
         response = self.client.get(self.url)
         self.assertEqual(response.status_code, status.HTTP_200_OK) 
+
+    def test_requisicao_post_para_criar_matricula(self):
+        """Teste para verificar a requisição POST para criar uma matrícula"""
+        dados = {
+            'estudante': self.estudante.pk,
+            'curso': self.curso.pk,
+            'periodo': 'M'
+        }
+        response = self.client.post(self.url, data=dados)
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)

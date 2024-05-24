@@ -3,6 +3,7 @@ from rest_framework.test import APITestCase
 from django.urls import reverse
 from rest_framework import status
 from escola.models import Estudante
+from escola.serializers import EstudanteSerializer
 
 class EstudantesTestCase(APITestCase):
     def setUp(self):
@@ -28,3 +29,24 @@ class EstudantesTestCase(APITestCase):
         """Teste de requisição GET"""
         response = self.client.get(self.url)#/estudantes/
         self.assertEqual(response.status_code,status.HTTP_200_OK)
+
+    def test_requisicao_get_para_listar_um_estudante(self):
+        """Teste de requisição GET para um estudante"""
+        response = self.client.get(self.url+'1/')#/estudantes/1/
+        self.assertEqual(response.status_code,status.HTTP_200_OK)
+        dados_estudante = Estudante.objects.get(pk=1)
+        dados_estudante_serializados = EstudanteSerializer(instance=dados_estudante).data
+        #print(dados_estudante_serializados)
+        self.assertEqual(response.data,dados_estudante_serializados)
+
+    def test_requisicao_post_para_criar_um_estudante(self):
+        """Teste de requisição POST para um estudante"""
+        dados = {
+            'nome':'teste',
+            'email':'teste@gmail.com',
+            'cpf':'82271917034',
+            'data_nascimento':'2003-05-04',
+            'celular':'11 99999-9999'
+        }
+        response = self.client.post(self.url,data=dados)
+        self.assertEqual(response.status_code,status.HTTP_201_CREATED)
